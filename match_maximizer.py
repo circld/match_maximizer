@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Callable, List, Tuple
+from typing import Callable, List, Sequence, Tuple
 
 # type aliases
 Contribution = float
 Match = float
-CompanyMatch = Tuple[Tuple[Contribution, Match]]
+CompanyMatch = Sequence[Tuple[Contribution, Match]]
 
 
 def calculate_match(pp_salary: float, contrib_pct: Contribution,
@@ -18,12 +18,13 @@ def calculate_match(pp_salary: float, contrib_pct: Contribution,
     return calc_match
 
 
-def display_company_strategy(*args):
+def format_company_strategy(company_match: CompanyMatch) -> str:
     NotImplemented
 
 
-def frontload_remainder(pay_period_contribs: List[float], target_contrib,
-                        pp_salary) -> List[float]:
+def frontload_remainder(pay_period_contribs: List[float],
+                        target_contrib: float,
+                        pp_salary: float) -> List[float]:
     contributions = pay_period_contribs[:]
     for idx, pp_amt in enumerate(contributions):
         remainder = pp_salary - pp_amt
@@ -60,7 +61,7 @@ def per_pay_period_salary(salary: int, pay_periods: int) -> float:
     return float(salary) / pay_periods
 
 
-def per_pay_period_limit(pp_salary, contrib_pct: Contribution) -> float:
+def per_pay_period_limit(pp_salary: float, contrib_pct: Contribution) -> float:
     return pp_salary * contrib_pct
 
 

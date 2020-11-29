@@ -1,13 +1,13 @@
 import match_maximizer as mm
 
 
-def test_calc_match():
+def test_calc_match() -> None:
     calc_match = mm.calculate_match(1200, .05, 0.5)
     assert 20. == calc_match(40.)
     assert 30. == calc_match(70.)
 
 
-def test_maximize_match():
+def test_maximize_match() -> None:
     pp_limit = 100
     target_contrib = 5000
     pay_period_contribs = [0.] * 12
@@ -17,15 +17,15 @@ def test_maximize_match():
     assert (3800, 600., [100.] * 12) == contributions
 
 
-def test_per_pay_period_salary():
+def test_per_pay_period_salary() -> None:
     assert 112.5 == mm.per_pay_period_salary(900, 8)
 
 
-def test_per_pay_period_limit():
+def test_per_pay_period_limit() -> None:
     assert 90 == mm.per_pay_period_limit(3000, .03)
 
 
-def test_recommend_optimized_maxed():
+def test_recommend_optimized_maxed() -> None:
     salary = 60000
     pay_periods = 24
     company_match = ((.03, 1.), (.02, .5))
@@ -39,7 +39,7 @@ def test_recommend_optimized_maxed():
     assert expected == recommendation
 
 
-def test_recommend_optimized_not_maxed():
+def test_recommend_optimized_not_maxed() -> None:
     salary = 60000
     pay_periods = 24
     company_match = ((.03, 1.), (.02, .5))
@@ -52,5 +52,5 @@ def test_recommend_optimized_not_maxed():
     assert expected == recommendation
 
 
-def test_recommend_even():
+def test_recommend_even() -> None:
     assert [2750] * 12 == mm.recommend_even(33000, 12)
