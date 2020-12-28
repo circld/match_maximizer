@@ -17,7 +17,7 @@ def parse_args() -> ap.Namespace:
         help="Annual salary off of which company match is calculated against.",
         type=float,
     )
-    parser.add_argument("pay_periods", help="Number of pay periods per year.")
+    parser.add_argument("pay_periods", help="Number of pay periods per year.", type=int)
     parser.add_argument(
         "target_contribution", help="Amount to contribute for the year.", type=float
     )
