@@ -1,4 +1,4 @@
-import match_maximizer as mm
+import match_maximizer.core as mm
 
 
 def test_calc_match() -> None:
@@ -32,10 +32,11 @@ def test_recommend_optimized_maxed() -> None:
     company_match = ((0.03, 1.0), (0.02, 0.5))
     target_contrib = 19500
     expected_total_match = salary * 0.04
-    total_match, recommendation = mm.recommend_optimized(
+    total_contrib, total_match, recommendation = mm.recommend_optimized(
         salary, pay_periods, company_match, target_contrib
     )
     expected = [2500.0] * 6 + [2375.0] + [125.0] * 17
+    assert total_contrib == target_contrib + total_match
     assert target_contrib == sum(recommendation)
     assert expected_total_match == total_match
     assert expected == recommendation
@@ -46,14 +47,17 @@ def test_recommend_optimized_not_maxed() -> None:
     pay_periods = 24
     company_match = ((0.03, 1.0), (0.02, 0.5))
     target_contrib = 2000
-    total_match, recommendation = mm.recommend_optimized(
+    total_contrib, total_match, recommendation = mm.recommend_optimized(
         salary, pay_periods, company_match, target_contrib
     )
     expected = [125.0] * 4 + [75.0] * 20
+    assert total_contrib == target_contrib + total_match
     assert target_contrib == sum(recommendation)
     assert 1900 == total_match
     assert expected == recommendation
 
 
 def test_recommend_uniform() -> None:
-    assert (33000, [2750] * 12) == mm.recommend_uniform(33000, 12)
+    assert (13200.0 + 1815.0, 1815.0, [1100.0] * 12) == mm.recommend_uniform(
+        33000, 12, ((0.03, 1.0), (0.05, 0.5)), 13200.0
+    )

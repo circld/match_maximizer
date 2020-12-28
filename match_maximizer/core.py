@@ -61,32 +61,48 @@ def per_pay_period_limit(pp_salary: float, contrib_pct: Contribution) -> float:
     return pp_salary * contrib_pct
 
 
-# FIXME refactor to return correct total match
-def recommend_uniform(target: int, pay_periods: int) -> Tuple[float, List[float]]:
-    return (float(target), [float(target) / pay_periods] * pay_periods)
+def recommend_uniform(
+    salary: int, pay_periods: int, match: CompanyMatch, target_contrib: float
+) -> Tuple[float, float, List[float]]:
+    pp_salary = per_pay_period_salary(salary, pay_periods)
+    pp_contrib = float(target_contrib) / pay_periods
+    total_match = 0.0
+    remaining = pp_contrib
+    # in a single pay period
+    for contrib_pct, match_pct in match:
+        contrib = min(remaining, contrib_pct * pp_salary)
+        total_match += contrib * match_pct
+        remaining -= contrib
+    total_match *= 12
+    return (
+        target_contrib + total_match,
+        total_match,
+        [pp_contrib] * pay_periods,
+    )
 
 
 def recommend_optimized(
     salary: int, pay_periods: int, match: CompanyMatch, target_contrib: float
-) -> Tuple[float, List[float]]:
+) -> Tuple[float, float, List[float]]:
     pp_salary = per_pay_period_salary(salary, pay_periods)
 
     pay_period_contribs = [0.0] * pay_periods
+    target_contrib_tmp = target_contrib
     total_match = 0.0
 
     # first pass: max out match (at each match level)
     for contrib_pct, match_pct in match:
         calc_match = calculate_match(pp_salary, contrib_pct, match_pct)
         pp_limit = per_pay_period_limit(pp_salary, contrib_pct)
-        target_contrib, total_match_, pay_period_contribs = maximize_match(
-            pay_period_contribs, target_contrib, pp_limit, calc_match
+        target_contrib_tmp, total_match_, pay_period_contribs = maximize_match(
+            pay_period_contribs, target_contrib_tmp, pp_limit, calc_match
         )
         total_match += total_match_
 
     # second pass: distribute the rest (frontload)
-    if target_contrib > 0:
+    if target_contrib_tmp > 0:
         pay_period_contribs = frontload_remainder(
-            pay_period_contribs, target_contrib, pp_salary
+            pay_period_contribs, target_contrib_tmp, pp_salary
         )
 
-    return total_match, pay_period_contribs
+    return (target_contrib + total_match, total_match, pay_period_contribs)
