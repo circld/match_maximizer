@@ -1,3 +1,7 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import match_maximizer.core as mm
 
 
@@ -58,6 +62,6 @@ def test_recommend_optimized_not_maxed() -> None:
 
 
 def test_recommend_uniform() -> None:
-    assert (13200.0 + 1815.0, 1815.0, [1100.0] * 12) == mm.recommend_uniform(
-        33000, 12, ((0.03, 1.0), (0.05, 0.5)), 13200.0
+    assert (13200.0 + 1815.0, 1815.0, [660.0] * 20) == mm.recommend_uniform(
+        33000, 20, ((0.03, 1.0), (0.05, 0.5)), 13200.0
     )

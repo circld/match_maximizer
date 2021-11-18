@@ -73,7 +73,7 @@ def recommend_uniform(
         contrib = min(remaining, contrib_pct * pp_salary)
         total_match += contrib * match_pct
         remaining -= contrib
-    total_match *= 12
+    total_match *= pay_periods
     return (
         target_contrib + total_match,
         total_match,
