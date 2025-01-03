@@ -1,4 +1,5 @@
 import argparse as ap
+from pprint import pformat
 
 import match_maximizer.core as mm
 
@@ -54,11 +55,10 @@ def parse_company_match(args: mm.Sequence[str]) -> mm.CompanyMatch:
     return tuple((floats[i], floats[i + 1]) for i in range(0, n, 2))
 
 
-# TODO pretty formatting
 def format_output(
     total_contribution: float, total_match: float, contributions: mm.List[float]
 ) -> str:
-    return f"Total contribution: {total_contribution}\nTotal match: {total_match}\nContributions: {contributions}"
+    return f"Total contribution: {total_contribution}\nTotal match: {total_match}\nContributions:\n{pformat(contributions)}"
 
 
 def main(args: ap.Namespace) -> mm.Tuple[float, float, mm.List[float]]:
